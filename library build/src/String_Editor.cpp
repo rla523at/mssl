@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <functional>
 
-//MS_String_Editor
+// MSSL: MS String Library
 namespace mssl
 {
 	class Case_Insensitive_Comparator
@@ -383,6 +383,22 @@ namespace mssl
 		result.shrink_to_fit();
 		return result;
 	}
+
+	std::string_view remove_after(std::string_view str, std::string_view target)
+	{
+		constexpr auto n = 1;
+		const auto pos = mssl::find_nth_position(str, target, n);
+
+		if (pos == mssl::fail_to_find)
+		{
+			return str;
+		}
+
+		const auto num_remove = str.size() - pos;
+		str.remove_suffix(num_remove);
+		return str;
+	}
+
 
 	void remove_inplace(std::string& str, const char target)
 	{

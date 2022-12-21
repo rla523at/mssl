@@ -1,4 +1,6 @@
 #pragma once
+#include "Exception.h"
+
 #include <string>
 #include <string_view>
 #include <vector>
@@ -39,8 +41,10 @@ namespace mssl
 
 	std::string remove(std::string_view str, const char target);
 	std::string remove(std::string_view str, std::string_view target);
+	std::string_view remove_after(std::string_view str, std::string_view target);
 	void remove_inplace(std::string& str, const char target);
 	void remove_inplace(std::string& str, std::string_view target);
+	
 
 	std::string replace(std::string_view str, const char target, const char replacement);
 	std::string replace(std::string_view str, std::string_view target, std::string_view replacement);
@@ -79,6 +83,22 @@ namespace mssl
 		if constexpr (std::is_same_v<T, std::string>)
 		{
 			return str.data();
+		}
+		else if constexpr (std::is_same_v<T, bool>)
+		{
+			if (mssl::compare_icase(str, "true"))
+			{
+				return true;
+			}
+			else if (mssl::compare_icase(str, "false"))
+			{
+				return false;
+			}
+			else
+			{
+				EXCEPTION(std::string(str) + " doesn't have boolean format");
+				return NULL;
+			}
 		}
 
 		std::istringstream iss(str.data());
